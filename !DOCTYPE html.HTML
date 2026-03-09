@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kanka Super AI</title>
+
+<style>
+
+body{
+margin:0;
+font-family:Arial;
+background:#0f0f0f;
+color:white;
+display:flex;
+flex-direction:column;
+height:100vh;
+}
+
+header{
+background:black;
+padding:15px;
+text-align:center;
+font-size:22px;
+}
+
+#chat{
+flex:1;
+overflow:auto;
+padding:15px;
+}
+
+.msg{
+margin:10px 0;
+}
+
+.user{color:#00ffc3}
+.bot{color:white}
+
+#bar{
+display:flex;
+padding:10px;
+background:#1a1a1a;
+}
+
+input{
+flex:1;
+padding:10px;
+border:none;
+border-radius:5px;
+}
+
+button{
+margin-left:5px;
+padding:10px;
+border:none;
+background:#00ffc3;
+border-radius:5px;
+cursor:pointer;
+}
+
+</style>
+</head>
+
+<body>
+
+<header>Kanka Super AI 🤖</header>
+
+<div id="chat"></div>
+
+<div id="bar">
+<input id="text" placeholder="Bir şey yaz kanka">
+<button onclick="send()">Gönder</button>
+<button onclick="voice()">🎤</button>
+</div>
+
+<script>
+
+function add(text,cls){
+let div=document.createElement("div")
+div.className="msg "+cls
+div.textContent=text
+document.getElementById("chat").appendChild(div)
+}
+
+function cevap(m){
+
+m=m.toLowerCase()
+
+if(m.includes("merhaba")) return "Merhaba kanka 👋"
+
+if(m.includes("nasılsın")) return "İyiyim kanka 😎"
+
+if(m.includes("adın")) return "Ben Kanka Super AI 🤖"
+
+if(m.includes("oyun")) return "Oyun oynamak ister misin? 'oyun başlat' yaz 🎮"
+
+if(m.includes("oyun başlat")){
+let n=Math.floor(Math.random()*10)
+window.secret=n
+return "0-10 arası sayı tuttum tahmin et 😎"
+}
+
+if(!isNaN(m) && window.secret!=undefined){
+
+if(Number(m)==window.secret){
+window.secret=undefined
+return "Doğru bildin kanka 🎉"
+}else{
+return "Olmadı tekrar dene 😁"
+}
+
+}
+
+if(m.includes("site")) return "Web sitesi yapmayı seviyorum 🌐"
+
+if(m.includes("kim yaptı")) return "Beni kankan için bir AI yaptı 😎"
+
+return "Bunu tam anlamadım kanka."
+}
+
+function send(){
+
+let input=document.getElementById("text")
+let m=input.value
+
+if(!m) return
+
+add("Sen: "+m,"user")
+
+let r=cevap(m)
+
+setTimeout(()=>{
+
+add("AI: "+r,"bot")
+speak(r)
+
+},500)
+
+input.value=""
+
+}
+
+function voice(){
+
+let rec=new webkitSpeechRecognition()
+
+rec.lang="tr-TR"
+
+rec.onresult=function(e){
+
+document.getElementById("text").value=e.results[0][0].transcript
+
+send()
+
+}
+
+rec.start()
+
+}
+
+function speak(t){
+
+let s=new SpeechSynthesisUtterance(t)
+
+s.lang="tr-TR"
+
+speechSynthesis.speak(s)
+
+}
+
+</script>
+
+</body>
+</html>
